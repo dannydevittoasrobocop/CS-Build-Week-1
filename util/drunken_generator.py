@@ -45,7 +45,6 @@ class World:
         self.grid = None
         self.width = 0
         self.height = 0
-        self.occupied = []
 
     def generate_rooms(self, size_x, size_y, num_rooms):
         '''
@@ -63,6 +62,7 @@ class World:
         x = self.width//2  # (this will become 0 on the first step)
         y = self.height//2
         room_count = 0
+        empty_space = True
 
         # Start generating rooms to the east
         # 1: east, 2: west, 3: north, 4: south
@@ -70,54 +70,72 @@ class World:
 
         # While there are rooms to be created...
         previous_room = None
+        current_room = None
         while room_count < num_rooms:
 
-            # Calculate the direction of the room to be created
-            if direction == 1 and x < size_x - 1 and self.grid[y][x+1] is None:
-                room_direction = "e"
-                x += 1
-                direction = random.randint(2, 4)
-            elif direction == 2 and x > 0 and self.grid[y][x-1] is None:
-                room_direction = "w"
-                x -= 1
-                direction = random.randint(1, 4)
-            elif direction == 3 and y < size_y - 1 and self.grid[y+1][x] is None:
-                room_direction = "n"
-                y += 1
-                direction = random.randint(1, 4)
-            elif direction == 4 and y > 0 and self.grid[y-1][x] is None:
-                room_direction = "s"
-                y -= 1
-                direction = random.randint(1, 3)
-            else:
-                if (x < 0) or (x > size_x - 1):
-                    direction = random.randint(3, 4)
+            while empty_space:
+                print(tuple((x,y)))
+                # Calculate the direction of the room to be created
+                if direction == 1 and x < size_x - 1 and self.grid[y][x+1] is None:
+                    room_direction = "e"
+                    x += 1
+                    direction = random.randint(2, 4)
+                elif direction == 2 and x > 0 and self.grid[y][x-1] is None:
+                    room_direction = "w"
+                    x -= 1
+                    direction = random.randint(1, 4)
+                elif direction == 3 and y < size_y - 1 and self.grid[y+1][x] is None:
+                    room_direction = "n"
+                    y += 1
+                    direction = random.randint(1, 4)
+                elif direction == 4 and y > 0 and self.grid[y-1][x] is None:
+                    room_direction = "s"
+                    y -= 1
+                    direction = random.randint(1, 3)
                 else:
-                    direction = random.randint(1, 2)
-                continue
+                    if (x < 0) or (x > size_x - 1):
+                        direction = random.randint(3, 4)
+                    elif (y < 0) or (y > size_y - 1):
+                        direction = random.randint(1, 2)
+                    else:
+                        self.move(direction, x, y)
+                        empty_space = False
+                        return
 
-            # Create a room in the given direction
-            room = Room(room_count, "A Generic Room",
-                        "This is a generic room.", x, y)
-            # Note that in Django, you'll need to save the room after you create it
+                # Create a room in the given direction
+                room = Room(room_count, "A Generic Room",
+                            "This is a generic room.", x, y)
+                # Note that in Django, you'll need to save the room after you create it
 
-            # Save the room in the World grid
-            self.grid[y][x] = room
-            self.occupied.append((x, y))
+                # Save the room in the World grid
+                self.grid[y][x] = room
 
-            # Connect the new room to the previous room
-            if previous_room is not None:
-                previous_room.connect_rooms(room, room_direction)
+                # Connect the new room to the previous room
+                if previous_room is not None:
+                    previous_room.connect_rooms(room, room_direction)
 
-            # Update iteration variables
-            previous_room = room
-            room_count += 1
+                # Update iteration variables
+                previous_room = room
+                room_count += 1
 
-    def occupado(self, coord):
-        if coord in self.occupied:
-            return True
-        else:
-            return False
+            while not empty_space:
+                return
+
+
+    def move(self, direction, x, y):
+        print("we moved")
+        if direction == 1:
+            x += 1
+            print(f"moved to {x}, {y}")
+        elif direction == 2:
+            x -= 1
+            print(f"moved to {x}, {y}")
+        elif direction == 3:
+            y += 1
+            print(f"moved to {x}, {y}")
+        elif direction == 4:
+            y -= 1
+            print(f"moved to {x}, {y}")
 
     def print_rooms(self):
         '''
@@ -175,7 +193,7 @@ class World:
 
 
 w = World()
-num_rooms = 20
+num_rooms = 10
 width = 20
 height = 20
 w.generate_rooms(width, height, num_rooms)
