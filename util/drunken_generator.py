@@ -4,6 +4,7 @@
 # You can modify generate_rooms() to create your own
 # procedural generation algorithm and use print_rooms()
 # to see the world.
+import random
 
 
 class Room:
@@ -41,6 +42,7 @@ class World:
         self.grid = None
         self.width = 0
         self.height = 0
+        self.occupied = []
     def generate_rooms(self, size_x, size_y, num_rooms):
         '''
         Fill up the grid, bottom to top, in a zig-zag pattern
@@ -54,12 +56,12 @@ class World:
             self.grid[i] = [None] * size_x
 
         # Start from lower-left corner (0,0)
-        x = -1 # (this will become 0 on the first step)
+        x = 0 # (this will become 0 on the first step)
         y = 0
         room_count = 0
 
         # Start generating rooms to the east
-        direction = 1  # 1: east, -1: west
+        direction = random.randint(1,4)  # 1: east, 2: west, 3: north, 4: south
 
 
         # While there are rooms to be created...
@@ -67,17 +69,27 @@ class World:
         while room_count < num_rooms:
 
             # Calculate the direction of the room to be created
-            if direction > 0 and x < size_x - 1:
+            if direction == 1 and x < size_x - 1:
                 room_direction = "e"
                 x += 1
-            elif direction < 0 and x > 0:
+                direction = random.randint(2,4)
+            elif direction == 2 and x > 0:
                 room_direction = "w"
                 x -= 1
-            else:
-                # If we hit a wall, turn north and reverse direction
+                direction = random.randint(1,4)
+            elif direction == 3 and y < size_y - 1:
                 room_direction = "n"
                 y += 1
-                direction *= -1
+                direction = random.randint(1,4)
+            elif direction == 4 and y > 0:
+                room_direction = "s"
+                y -= 1
+                direction = random.randint(1,3)
+            else:
+                if (x < 0) or (x > size_x -1):
+                    direction = random.randint(3,4)
+                else:
+                    direction = random.randint(1,2)
 
             # Create a room in the given direction
             room = Room(room_count, "A Generic Room", "This is a generic room.", x, y)
@@ -85,6 +97,7 @@ class World:
 
             # Save the room in the World grid
             self.grid[y][x] = room
+            self.occupied.append((x,y))
 
             # Connect the new room to the previous room
             if previous_room is not None:
@@ -152,9 +165,9 @@ class World:
 
 
 w = World()
-num_rooms = 44
-width = 8
-height = 7
+num_rooms = 100
+width = 20
+height = 20
 w.generate_rooms(width, height, num_rooms)
 w.print_rooms()
 
