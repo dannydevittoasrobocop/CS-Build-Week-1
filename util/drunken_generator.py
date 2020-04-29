@@ -74,7 +74,7 @@ class World:
         while room_count < num_rooms:
 
             while empty_space:
-                print(tuple((x,y)))
+                print(tuple((x, y)))
                 # Calculate the direction of the room to be created
                 if direction == 1 and x < size_x - 1 and self.grid[y][x+1] is None:
                     room_direction = "e"
@@ -100,7 +100,6 @@ class World:
                     else:
                         self.move(direction, x, y)
                         empty_space = False
-                        return
 
                 # Create a room in the given direction
                 room = Room(room_count, "A Generic Room",
@@ -114,13 +113,20 @@ class World:
                 if previous_room is not None:
                     previous_room.connect_rooms(room, room_direction)
 
+                # if self.grid[y][x] is not None:
+                #     make connection
+                #     if previous_room == direction we are going
+                #         dont make connection
+                #     else:
+                #         return
+
                 # Update iteration variables
                 previous_room = room
                 room_count += 1
 
             while not empty_space:
-                return
-
+                if getattr(room, f"{room_direction}_to") is not None:
+                    return
 
     def move(self, direction, x, y):
         print("we moved")
@@ -193,7 +199,7 @@ class World:
 
 
 w = World()
-num_rooms = 10
+num_rooms = 50
 width = 20
 height = 20
 w.generate_rooms(width, height, num_rooms)
