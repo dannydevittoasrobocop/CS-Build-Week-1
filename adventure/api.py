@@ -72,6 +72,4 @@ def say(request):
 @api_view(["GET"])
 def rooms(request):
     room = Room.objects.all().values()
-    if room.n_to > 0:
-        room.n_to = True
     return JsonResponse({'title': list(room)}, safe=True)
