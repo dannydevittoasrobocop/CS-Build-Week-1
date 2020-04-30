@@ -9,9 +9,13 @@ class Room(models.Model):
     title = models.CharField(max_length=50, default="DEFAULT TITLE")
     description = models.CharField(max_length=500, default="DEFAULT DESCRIPTION")
     n_to = models.IntegerField(default=0)
+    bool_n_to = models.BooleanField(default=False)
     s_to = models.IntegerField(default=0)
+    bool_s_to = models.BooleanField(default=False)
     e_to = models.IntegerField(default=0)
+    bool_e_to = models.BooleanField(default=False)
     w_to = models.IntegerField(default=0)
+    bool_w_to = models.BooleanField(default=False)
     def connectRooms(self, destinationRoom, direction):
         destinationRoomID = destinationRoom.id
         try:
@@ -21,12 +25,20 @@ class Room(models.Model):
         else:
             if direction == "n":
                 self.n_to = destinationRoomID
+                if self.n_to > 0:
+                    self.bool_n_to = True
             elif direction == "s":
                 self.s_to = destinationRoomID
+                if self.s_to > 0:
+                    self.bool_s_to = True
             elif direction == "e":
                 self.e_to = destinationRoomID
+                if self.e_to > 0:
+                    self.bool_e_to = True
             elif direction == "w":
                 self.w_to = destinationRoomID
+                if self.w_to > 0:
+                    self.bool_w_to = True
             else:
                 print("Invalid direction")
                 return
