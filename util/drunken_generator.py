@@ -215,8 +215,3 @@ w.print_rooms()
 
 print(
     f"\n\nWorld\n  height: {height}\n  width: {width},\n  num_rooms: {num_rooms}\n")
-
-# for row in w.grid:
-#     for i in row:
-#         if i is not None:
-#             print(f"id: {i.id}, n_to: {i.n_to}, s_to: {i.s_to}, e_to: {i.e_to}, w_to: {i.w_to}")
