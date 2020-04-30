@@ -5,39 +5,40 @@
 # procedural generation algorithm and use print_rooms()
 # to see the world.
 import random
+from adventure.models import Room
 
 
-class Room:
-    def __init__(self, id, name, description, x, y):
-        self.id = id
-        self.name = name
-        self.description = description
-        self.n_to = None
-        self.s_to = None
-        self.e_to = None
-        self.w_to = None
-        self.x = x
-        self.y = y
+# class Room:
+#     def __init__(self, id, name, description, x, y):
+#         self.id = id
+#         self.name = name
+#         self.description = description
+#         self.n_to = None
+#         self.s_to = None
+#         self.e_to = None
+#         self.w_to = None
+#         self.x = x
+#         self.y = y
 
-    def __repr__(self):
-        # if self.e_to is not None:
-        #     return f"({self.x}, {self.y}) -> ({self.e_to.x}, {self.e_to.y})"
-        return f"({self.x}, {self.y})"
+#     def __repr__(self):
+#         # if self.e_to is not None:
+#         #     return f"({self.x}, {self.y}) -> ({self.e_to.x}, {self.e_to.y})"
+#         return f"({self.x}, {self.y})"
 
-    def connect_rooms(self, connecting_room, direction):
-        '''
-        Connect two rooms in the given n/s/e/w direction
-        '''
-        reverse_dirs = {"n": "s", "s": "n", "e": "w", "w": "e"}
-        reverse_dir = reverse_dirs[direction]
-        setattr(self, f"{direction}_to", connecting_room)
-        setattr(connecting_room, f"{reverse_dir}_to", self)
+#     def connect_rooms(self, connecting_room, direction):
+#         '''
+#         Connect two rooms in the given n/s/e/w direction
+#         '''
+#         reverse_dirs = {"n": "s", "s": "n", "e": "w", "w": "e"}
+#         reverse_dir = reverse_dirs[direction]
+#         setattr(self, f"{direction}_to", connecting_room)
+#         setattr(connecting_room, f"{reverse_dir}_to", self)
 
-    def get_room_in_direction(self, direction):
-        '''
-        Connect two rooms in the given n/s/e/w direction
-        '''
-        return getattr(self, f"{direction}_to")
+#     def get_room_in_direction(self, direction):
+#         '''
+#         Connect two rooms in the given n/s/e/w direction
+#         '''
+#         return getattr(self, f"{direction}_to")
 
 
 class World:
@@ -148,6 +149,7 @@ class World:
                     break
                 else:
                     print("wtf is happening here?")
+
                    
     def print_rooms(self):
         '''
@@ -214,3 +216,8 @@ w.print_rooms()
 
 print(
     f"\n\nWorld\n  height: {height}\n  width: {width},\n  num_rooms: {num_rooms}\n")
+
+# for row in w.grid:
+#     for i in row:
+#         if i is not None:
+#             print(f"id: {i.id}, n_to: {i.n_to}, s_to: {i.s_to}, e_to: {i.e_to}, w_to: {i.w_to}")
