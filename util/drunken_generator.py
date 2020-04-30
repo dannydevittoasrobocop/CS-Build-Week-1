@@ -60,23 +60,21 @@ class World:
         y = self.height//2
         room_count = 0
         empty_space = True
+        previous_room = None
+        current_room = None
 
         def move(direction):
-            print("we moved")
             nonlocal x
             nonlocal y
             if direction == 1 and x < size_x - 1 and self.grid[y][x+1] is not None:
                 x += 1
-                print(f"moved to {x}, {y}")
+                # print(f"moved to {x}, {y}")
             elif direction == 2 and self.grid[y][x-1] is not None:
                 x -= 1
-                print(f"moved to {x}, {y}")
             elif direction == 3 and y < size_y - 1 and self.grid[y+1][x] is not None:
                 y += 1
-                print(f"moved to {x}, {y}")
             elif direction == 4 and y > 0 and self.grid[y-1][x] is not None:
                 y -= 1
-                print(f"moved to {x}, {y}")
             return self.grid[y][x]
 
 
@@ -85,15 +83,12 @@ class World:
         # direction = random.randint(1, 4)
 
         # While there are rooms to be created...
-
-        previous_room = None
-        current_room = None
         while room_count < num_rooms:
 
             while empty_space:
                 direction = random.randint(1, 4)
-                print(direction)
-                print(tuple((x, y)))
+                # print(direction)
+                # print(tuple((x, y)))
                 # Calculate the direction of the room to be created
                 if direction == 1 and x < size_x - 1 and self.grid[y][x+1] is None:
                     room_direction = "e"
@@ -136,84 +131,24 @@ class World:
                 room_count += 1
 
             while not empty_space:
-                print(f"this is last direction: {direction}")
                 current_room = move(direction)
+                previous_room = current_room
                 dirs = {1:'e', 2:'w', 3:'n', 4:'s'}
                 rdirs = {2:'e', 1:'w', 4:'n', 3:'s'}
                 der = dirs[direction]
                 rders = rdirs[direction]
-                print(f"previous room: {previous_room}")
-                print(f"current room: {current_room}")
-                print(f"This is the grid: {self.grid[y][x]}")
-                print(f"coord {x} {y}")
-                # print(self.grid)
-                print(getattr(previous_room, f"{der}_to"))
                 
                 if getattr(previous_room, f"{der}_to") is None:
-                    print(f"This is the room: {room}")
-                    current_room.connect_rooms(room, der)
+                    # current_room.connect_rooms(room, rders)
                     previous_room.connect_rooms(room, rders)
                     empty_space = True
                     break
-                else:
+                elif getattr(previous_room, f"{der}_to") is not None:
                     empty_space = True
                     break
-                    # if direction == 1 and x < size_x - 1 and self.grid[y][x+1] is not None:
-                    # room_direction = "e"
-                    # x += 1
-                    # direction = random.randint(2, 4)
-                    # elif direction == 2 and x > 0 and self.grid[y][x-1] is not None:
-                    #     room_direction = "w"
-                    #     x -= 1
-                    #     direction = random.randint(1, 4)
-                    # elif direction == 3 and y < size_y - 1 and self.grid[y+1][x] is not None:
-                    #     room_direction = "n"
-                    #     y += 1
-                    #     direction = random.randint(1, 4)
-                    # elif direction == 4 and y > 0 and self.grid[y-1][x] is not None:
-                    #     room_direction = "s"
-                    #     y -= 1
-                    #     direction = random.randint(1, 3)
-                    # else:
-                    #     if (x < 0) or (x > size_x - 1):
-                    #         direction = random.randint(3, 4)
-                    #     elif (y < 0) or (y > size_y - 1):
-                    #         direction = random.randint(1, 2)
-                    #     else:
-                    #         # move(direction)
-                    #         empty_space = True
-                    #         break 
-                    print("look at me now, ma")
+                else:
+                    print("wtf is happening here?")
                    
-
-                # if room in direction we are going has connection in that direction...
-                    # move to room
-                    # reroll route
-                        # if empty
-                            # empty_space = True
-                # else if room in direction we are going does not have connection in that direction...
-                    # move to room
-                    # connect rooms
-                    # reroll route
-                        #if empty
-                            # empty_space = True
-
-    # def move(self, direction, y, x):
-    #     print("we moved")
-    #     if direction == 1:
-    #         x += 1
-    #         print(f"moved to {x}, {y}")
-    #     elif direction == 2:
-    #         x -= 1
-    #         print(f"moved to {x}, {y}")
-    #     elif direction == 3:
-    #         y += 1
-    #         print(f"moved to {x}, {y}")
-    #     elif direction == 4:
-    #         y -= 1
-    #         print(f"moved to {x}, {y}")
-    #     return self.grid[x][y]
-
     def print_rooms(self):
         '''
         Print the rooms in room_grid in ascii characters.
