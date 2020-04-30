@@ -12,25 +12,15 @@ class Room(models.Model):
     s_to = models.IntegerField(default=0)
     e_to = models.IntegerField(default=0)
     w_to = models.IntegerField(default=0)
-    def connectRooms(self, destinationRoom, direction):
-        destinationRoomID = destinationRoom.id
-        try:
-            destinationRoom = Room.objects.get(id=destinationRoomID)
-        except Room.DoesNotExist:
-            print("That room does not exist")
-        else:
-            if direction == "n":
-                self.n_to = destinationRoomID
-            elif direction == "s":
-                self.s_to = destinationRoomID
-            elif direction == "e":
-                self.e_to = destinationRoomID
-            elif direction == "w":
-                self.w_to = destinationRoomID
-            else:
-                print("Invalid direction")
-                return
-            self.save()
+    x = models.IntegerField(default=0)
+    y = models.IntegerField(default=0)
+    def connect_rooms(self, connecting_room, direction):
+        reverse_dirs = {"n": "s", "s": "n", "e": "w", "w": "e"}
+        reverse_dir = reverse_dirs[direction]
+        setattr(self, f"{direction}_to", connecting_room.id)
+        setattr(connecting_room, f"{reverse_dir}_to", self.id)
+        self.save()
+        connecting_room.save()
     def playerNames(self, currentPlayerID):
         return [p.user.username for p in Player.objects.filter(currentRoom=self.id) if p.id != int(currentPlayerID)]
     def playerUUIDs(self, currentPlayerID):
