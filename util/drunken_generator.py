@@ -45,27 +45,22 @@ class World:
         self.grid = None
         self.width = 0
         self.height = 0
-
-        self.previous_room = None
-        self.current_room = None
-
     def generate_rooms(self, size_x, size_y, num_rooms):
         '''
         Fill up the grid, bottom to top, in a zig-zag pattern
         '''
-
         # Initialize the grid
         self.grid = [None] * size_y
         self.width = size_x
         self.height = size_y
         for i in range(len(self.grid)):
             self.grid[i] = [None] * size_x
-
         # Start from lower-left corner (0,0)
         x = self.width//2  # (this will become 0 on the first step)
         y = self.height//2
         room_count = 0
         empty_space = True
+
 
         # Start generating rooms to the east
         # 1: east, 2: west, 3: north, 4: south
@@ -73,9 +68,12 @@ class World:
 
         # While there are rooms to be created...
 
+        previous_room = None
+        current_room = None
         while room_count < num_rooms:
 
             while empty_space:
+                direction = random.randint(1, 4)
                 print(tuple((x, y)))
                 # Calculate the direction of the room to be created
                 if direction == 1 and x < size_x - 1 and self.grid[y][x+1] is None:
@@ -100,8 +98,7 @@ class World:
                     elif (y < 0) or (y > size_y - 1):
                         direction = random.randint(1, 2)
                     else:
-                        self.move(direction, x, y)
-                        print("this is a block")
+                        # self.move(direction, y, x)
                         empty_space = False
                         continue
 
@@ -109,76 +106,60 @@ class World:
                 room = Room(room_count, "A Generic Room",
                             "This is a generic room.", x, y)
                 # Note that in Django, you'll need to save the room after you create it
-
                 # Save the room in the World grid
                 self.grid[y][x] = room
-                print(f"this is the room {room}")
-
                 # Connect the new room to the previous room
-                if self.previous_room is not None:
-                    self.previous_room.connect_rooms(room, room_direction)
-
-                # if self.grid[y][x] is not None:
-                #     make connection
-                #     if self.previous_room == direction we are going
-                #         dont make connection
-                #     else:
-                #         return
+                if previous_room is not None:
+                    previous_room.connect_rooms(room, room_direction)
 
                 # Update iteration variables
-                self.previous_room = self.current_room
-                self.current_room = room
+                previous_room = room
                 room_count += 1
 
             while not empty_space:
-                dirs = {1: 'e', 2: 'w', 3: 'n', 4: 's'}
+                current_room = self.move(direction, y, x)
+                dirs = {1:'e', 2:'w', 3:'n', 4:'s'}
                 der = dirs[direction]
-                print(f"previous room: {self.previous_room}")
-                print(f"current room: {self.grid[x][y]}{x}{y}")
-                print(self.grid)
-                print(getattr(self.previous_room, f"{der}_to"))
-                if getattr(self.previous_room, f"{der}_to") == self.move(direction, x, y):
+                print(f"previous room: {previous_room}")
+                print(f"current room: {current_room}")
+                # print(self.grid)
+                print(getattr(previous_room, f"{der}_to"))
+                
+                if getattr(previous_room, f"{der}_to") is None:
+                    previous_room.connect_rooms(room, der)
                     print("look at me now, ma")
-                    return
-                return
-                # if room in direction we are going has connection in that direction...
-                # move to room
-                # reroll route
-                # if empty
-                # empty_space = True
-                # else if room in direction we are going does not have connection in that direction...
-                # move to room
-                # connect rooms
-                # reroll route
-                # if empty
-                # empty_space = True
+                    direction = random.randint(1,4)
+                    empty_space = True
+                    return empty_space
+                
 
-    def move(self, direction, x, y):
+                # if room in direction we are going has connection in that direction...
+                    # move to room
+                    # reroll route
+                        # if empty
+                            # empty_space = True
+                # else if room in direction we are going does not have connection in that direction...
+                    # move to room
+                    # connect rooms
+                    # reroll route
+                        #if empty
+                            # empty_space = True
+
+    def move(self, direction, y, x):
         print("we moved")
         if direction == 1:
             x += 1
-            self.previous_room = self.current_room
-            self.current_room = self.grid[x][y]
-            return self.current_room
             print(f"moved to {x}, {y}")
         elif direction == 2:
             x -= 1
-            self.previous_room = self.current_room
-            self.current_room = self.grid[x][y]
-            return self.current_room
             print(f"moved to {x}, {y}")
         elif direction == 3:
             y += 1
-            self.previous_room = self.current_room
-            self.current_room = self.grid[x][y]
-            return self.current_room
             print(f"moved to {x}, {y}")
         elif direction == 4:
             y -= 1
-            self.previous_room = self.current_room
-            self.current_room = self.grid[x][y]
-            return self.current_room
             print(f"moved to {x}, {y}")
+        return self.grid[x][y]
 
     def print_rooms(self):
         '''
@@ -236,9 +217,9 @@ class World:
 
 
 w = World()
-num_rooms = 5
-width = 5
-height = 5
+num_rooms = 20
+width = 10
+height = 10
 w.generate_rooms(width, height, num_rooms)
 w.print_rooms()
 
