@@ -61,10 +61,28 @@ class World:
         room_count = 0
         empty_space = True
 
+        def move(direction):
+            print("we moved")
+            nonlocal x
+            nonlocal y
+            if direction == 1 and x < size_x - 1 and self.grid[y][x+1] is not None:
+                x += 1
+                print(f"moved to {x}, {y}")
+            elif direction == 2 and self.grid[y][x-1] is not None:
+                x -= 1
+                print(f"moved to {x}, {y}")
+            elif direction == 3 and y < size_y - 1 and self.grid[y+1][x] is not None:
+                y += 1
+                print(f"moved to {x}, {y}")
+            elif direction == 4 and y > 0 and self.grid[y-1][x] is not None:
+                y -= 1
+                print(f"moved to {x}, {y}")
+            return self.grid[y][x]
+
 
         # Start generating rooms to the east
         # 1: east, 2: west, 3: north, 4: south
-        direction = random.randint(1, 4)
+        # direction = random.randint(1, 4)
 
         # While there are rooms to be created...
 
@@ -74,6 +92,7 @@ class World:
 
             while empty_space:
                 direction = random.randint(1, 4)
+                print(direction)
                 print(tuple((x, y)))
                 # Calculate the direction of the room to be created
                 if direction == 1 and x < size_x - 1 and self.grid[y][x+1] is None:
@@ -98,9 +117,9 @@ class World:
                     elif (y < 0) or (y > size_y - 1):
                         direction = random.randint(1, 2)
                     else:
-                        # self.move(direction, y, x)
+                        # move(direction)
                         empty_space = False
-                        continue
+                        break
 
                 # Create a room in the given direction
                 room = Room(room_count, "A Generic Room",
@@ -117,21 +136,55 @@ class World:
                 room_count += 1
 
             while not empty_space:
-                current_room = self.move(direction, y, x)
+                print(f"this is last direction: {direction}")
+                current_room = move(direction)
                 dirs = {1:'e', 2:'w', 3:'n', 4:'s'}
+                rdirs = {2:'e', 1:'w', 4:'n', 3:'s'}
                 der = dirs[direction]
+                rders = rdirs[direction]
                 print(f"previous room: {previous_room}")
                 print(f"current room: {current_room}")
+                print(f"This is the grid: {self.grid[y][x]}")
+                print(f"coord {x} {y}")
                 # print(self.grid)
                 print(getattr(previous_room, f"{der}_to"))
                 
                 if getattr(previous_room, f"{der}_to") is None:
-                    previous_room.connect_rooms(room, der)
-                    print("look at me now, ma")
-                    direction = random.randint(1,4)
+                    print(f"This is the room: {room}")
+                    current_room.connect_rooms(room, der)
+                    previous_room.connect_rooms(room, rders)
                     empty_space = True
-                    return empty_space
-                
+                    break
+                else:
+                    empty_space = True
+                    break
+                    # if direction == 1 and x < size_x - 1 and self.grid[y][x+1] is not None:
+                    # room_direction = "e"
+                    # x += 1
+                    # direction = random.randint(2, 4)
+                    # elif direction == 2 and x > 0 and self.grid[y][x-1] is not None:
+                    #     room_direction = "w"
+                    #     x -= 1
+                    #     direction = random.randint(1, 4)
+                    # elif direction == 3 and y < size_y - 1 and self.grid[y+1][x] is not None:
+                    #     room_direction = "n"
+                    #     y += 1
+                    #     direction = random.randint(1, 4)
+                    # elif direction == 4 and y > 0 and self.grid[y-1][x] is not None:
+                    #     room_direction = "s"
+                    #     y -= 1
+                    #     direction = random.randint(1, 3)
+                    # else:
+                    #     if (x < 0) or (x > size_x - 1):
+                    #         direction = random.randint(3, 4)
+                    #     elif (y < 0) or (y > size_y - 1):
+                    #         direction = random.randint(1, 2)
+                    #     else:
+                    #         # move(direction)
+                    #         empty_space = True
+                    #         break 
+                    print("look at me now, ma")
+                   
 
                 # if room in direction we are going has connection in that direction...
                     # move to room
@@ -145,21 +198,21 @@ class World:
                         #if empty
                             # empty_space = True
 
-    def move(self, direction, y, x):
-        print("we moved")
-        if direction == 1:
-            x += 1
-            print(f"moved to {x}, {y}")
-        elif direction == 2:
-            x -= 1
-            print(f"moved to {x}, {y}")
-        elif direction == 3:
-            y += 1
-            print(f"moved to {x}, {y}")
-        elif direction == 4:
-            y -= 1
-            print(f"moved to {x}, {y}")
-        return self.grid[x][y]
+    # def move(self, direction, y, x):
+    #     print("we moved")
+    #     if direction == 1:
+    #         x += 1
+    #         print(f"moved to {x}, {y}")
+    #     elif direction == 2:
+    #         x -= 1
+    #         print(f"moved to {x}, {y}")
+    #     elif direction == 3:
+    #         y += 1
+    #         print(f"moved to {x}, {y}")
+    #     elif direction == 4:
+    #         y -= 1
+    #         print(f"moved to {x}, {y}")
+    #     return self.grid[x][y]
 
     def print_rooms(self):
         '''
@@ -217,9 +270,9 @@ class World:
 
 
 w = World()
-num_rooms = 20
-width = 10
-height = 10
+num_rooms = 100
+width = 20
+height = 20
 w.generate_rooms(width, height, num_rooms)
 w.print_rooms()
 
