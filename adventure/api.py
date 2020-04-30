@@ -87,4 +87,4 @@ def rooms(request):
     s_to_bool = False
     if room.s_to > 0:
         s_to_bool = True
-    return JsonResponse({'id': room_id, 'title': room_title, 'description': room_desc, 'e_to': e_to_bool, 'w_to': w_to_bool, 'n_to': n_to_bool, 's_to': s_to_bool}, safe=True)
+    return JsonResponse(List{'id': room_id, 'title': room_title, 'description': room_desc, 'e_to': e_to_bool, 'w_to': w_to_bool, 'n_to': n_to_bool, 's_to': s_to_bool}), safe=True)
