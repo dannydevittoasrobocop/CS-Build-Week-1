@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from decouple import config
 from django.contrib.auth.models import User
 from .models import *
+from util.drunken_generator import World
 from rest_framework.decorators import api_view
 import json
 
@@ -71,5 +72,6 @@ def say(request):
 # type of request
 @api_view(["GET"])
 def rooms(request):
+    world = World.objects.all().values()
     room = Room.objects.all().values()
-    return JsonResponse({'title': list(room)}, safe=True)
+    return JsonResponse({'title': list(room), 'grid': list(world)}, safe=True)
