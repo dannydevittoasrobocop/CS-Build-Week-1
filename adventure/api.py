@@ -72,6 +72,5 @@ def say(request):
 # type of request
 @api_view(["GET"])
 def rooms(request):
-    world = World.all().values()
     room = Room.objects.all().values()
-    return JsonResponse({'title': list(room), 'grid': list(world)}, safe=True)
+    return JsonResponse({'title': list(room)}, safe=True)
