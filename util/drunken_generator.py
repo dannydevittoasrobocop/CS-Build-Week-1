@@ -3,7 +3,7 @@
 #
 # You can modify generate_rooms() to create your own
 # procedural generation algorithm and use print_rooms()
-# to see the world.
+# to see the world
 import random
 from adventure.models import Room
 
