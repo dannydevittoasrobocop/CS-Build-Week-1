@@ -72,4 +72,19 @@ def say(request):
 @api_view(["GET"])
 def rooms(request):
     room = Room.objects.all().values()
-    return JsonResponse({'title': list(room)}, safe=True)
+    room_id = room.id
+    room_title = room.title
+    room_desc = room.description
+    e_to_bool = False
+    if room.e_to > 0:
+        e_to_bool = True
+    w_to_bool = False
+    if room.w_to > 0:
+        w_to_bool = True
+    n_to_bool = False
+    if room.n_to > 0:
+        n_to_bool = True
+    s_to_bool = False
+    if room.s_to > 0:
+        s_to_bool = True
+    return JsonResponse({'id': room_id, 'title': room_title, 'description': room_desc, 'e_to': e_to_bool, 'w_to': w_to_bool, 'n_to': n_to_bool, 's_to': s_to_bool}, safe=True)
