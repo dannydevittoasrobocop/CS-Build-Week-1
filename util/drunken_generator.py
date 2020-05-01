@@ -120,6 +120,7 @@ class World:
                 # Create a room in the given direction
                 room = Room(room_count, "A Generic Room",
                             "This is a generic room.", x, y)
+                room.save_coords(y, x)
                 # Note that in Django, you'll need to save the room after you create it
                 # Save the room in the World grid
                 self.grid[y][x] = room
