@@ -142,10 +142,10 @@ class World:
                     # current_room.connect_rooms(room, rders)
                     previous_room.connect_rooms(room, rders)
                     empty_space = True
-                    break
+                    continue
                 elif getattr(previous_room, f"{der}_to") is not None:
                     empty_space = True
-                    break
+                    continue
                 self.grid[y][x] = room
                 previous_room = room
                 
