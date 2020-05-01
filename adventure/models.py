@@ -18,7 +18,7 @@ class Room(models.Model):
         setattr(self, 'x', x)
         setattr(self, 'y', y)
         self.save()
-     def connectRooms(self, destinationRoom, direction):
+    def connectRooms(self, destinationRoom, direction):
         destinationRoomID = destinationRoom.id
         try:
             destinationRoom = Room.objects.get(id=destinationRoomID)
