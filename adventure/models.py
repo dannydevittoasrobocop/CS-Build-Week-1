@@ -14,6 +14,11 @@ class Room(models.Model):
     w_to = models.IntegerField(default=0)
     x = models.IntegerField(default=0)
     y = models.IntegerField(default=0)
+    def make_coords(self, y, x):
+        setattr(self, 'x', x)
+        setattr(self, 'y', y)
+        x.save()
+        y.save()
     def connect_rooms(self, connecting_room, direction):
         reverse_dirs = {"n": "s", "s": "n", "e": "w", "w": "e"}
         reverse_dir = reverse_dirs[direction]
