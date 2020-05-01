@@ -113,7 +113,7 @@ class World:
                     elif (y < 0) or (y > size_y - 1):
                         direction = random.randint(1, 2)
                     else:
-                        # move(direction)
+                        move(direction)
                         empty_space = False
                         break
 
@@ -133,8 +133,6 @@ class World:
                 room_count += 1
 
             while not empty_space:
-                current_room = move(direction)
-                previous_room = current_room
                 dirs = {1: 'e', 2: 'w', 3: 'n', 4: 's'}
                 rdirs = {2: 'e', 1: 'w', 4: 'n', 3: 's'}
                 der = dirs[direction]
@@ -148,8 +146,9 @@ class World:
                 elif getattr(previous_room, f"{der}_to") is not None:
                     empty_space = True
                     break
-                else:
-                    print("wtf is happening here?")
+                self.grid[y][x] = room
+                previous_room = room
+                
 
     def print_rooms(self):
         '''
