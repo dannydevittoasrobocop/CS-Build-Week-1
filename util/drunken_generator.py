@@ -63,7 +63,6 @@ class World:
         room_count = 0
         empty_space = True
         previous_room = None
-        current_room = None
 
         def move(direction):
             nonlocal x
@@ -94,24 +93,20 @@ class World:
                 if direction == 1 and x < size_x - 1 and self.grid[y][x+1] is None:
                     room_direction = "e"
                     x += 1
-                    direction = random.randint(2, 4)
                 elif direction == 2 and x > 0 and self.grid[y][x-1] is None:
                     room_direction = "w"
                     x -= 1
-                    direction = random.randint(1, 4)
                 elif direction == 3 and y < size_y - 1 and self.grid[y+1][x] is None:
                     room_direction = "n"
                     y += 1
-                    direction = random.randint(1, 4)
                 elif direction == 4 and y > 0 and self.grid[y-1][x] is None:
                     room_direction = "s"
                     y -= 1
-                    direction = random.randint(1, 3)
                 else:
                     if (x < 0) or (x > size_x - 1):
-                        direction = random.randint(3, 4)
+                        break
                     elif (y < 0) or (y > size_y - 1):
-                        direction = random.randint(1, 2)
+                        break
                     else:
                         move(direction)
                         empty_space = False
@@ -126,7 +121,7 @@ class World:
                 self.grid[y][x] = room
                 # Connect the new room to the previous room
                 if previous_room is not None:
-                    previous_room.connect_rooms(room, room_direction)
+                    previous_room.connectRooms(room, room_direction)
 
                 # Update iteration variables
                 previous_room = room
@@ -140,7 +135,7 @@ class World:
 
                 if getattr(previous_room, f"{der}_to") is None:
                     # current_room.connect_rooms(room, rders)
-                    previous_room.connect_rooms(room, rders)
+                    previous_room.connectRooms(room, dirs)
                     empty_space = True
                     continue
                 elif getattr(previous_room, f"{der}_to") is not None:
@@ -206,7 +201,7 @@ class World:
 
 
 w = World()
-num_rooms = 100
+num_rooms = 10
 width = 20
 height = 20
 w.generate_rooms(width, height, num_rooms)
